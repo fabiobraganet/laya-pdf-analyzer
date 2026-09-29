@@ -11,6 +11,12 @@ cp .env.example .env
 cargo run
 ```
 
+Ou, com Docker:
+
+```bash
+docker compose up --build
+```
+
 Abra `http://127.0.0.1:8082`. Há documento, bateria e provedor simulados determinísticos já carregados. Importe um PDF com camada de texto para substituir o documento de demonstração.
 
 ## LAYA real — estado atual
