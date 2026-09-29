@@ -38,7 +38,7 @@ async fn run(app: App) {
         loop {
             let ready: Vec<_> = nodes.iter().filter(|n| !finished.contains_key(&n.id) && applicable(n, &finished) == "run").cloned().collect();
             let pending: Vec<_> = nodes.iter().filter(|n| !finished.contains_key(&n.id)).cloned().collect();
-            for n in pending { let st = applicable(&n, &finished); if matches!(st.as_str(), "na" | "disabled" | "blocked") { finished.insert(n.id.clone(), ResultRow { chunk: chunk.index, node: n.id.clone(), state: st, answer: String::new(), reason: String::new(), evidence: String::new(), evidence_found: false, duration_ms: 0, attempts: 0, error: String::new() }); } }
+            for n in pending { let st = applicable(&n, &finished); if matches!(st.as_str(), "na" | "disabled") { finished.insert(n.id.clone(), ResultRow { chunk: chunk.index, node: n.id.clone(), state: st, answer: String::new(), reason: String::new(), evidence: String::new(), evidence_found: false, duration_ms: 0, attempts: 0, error: String::new() }); } }
             if ready.is_empty() { break; }
             let mut tasks = JoinSet::new();
             for node in ready { let text = chunk.text.clone(); let index = chunk.index; tasks.spawn(async move { sleep(Duration::from_millis(650)).await; result_for(index, &node, &text) }); if tasks.len() >= limit.max(1) { if let Some(Ok(row)) = tasks.join_next().await { finished.insert(row.node.clone(), row); } } }
