@@ -2,10 +2,15 @@ services:
   app:
     build: .
     restart: unless-stopped
+    environment:
+      LAYA_URL: http://laya:8000
     ports:
       - "127.0.0.1:8082:8082"
     volumes:
       - laya-pdf-analyzer-data:/data
+    networks:
+      - default
+      - laya-runtime
     healthcheck:
       test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:8082/health"]
       interval: 10s
@@ -14,3 +19,7 @@ services:
       start_period: 10s
 volumes:
   laya-pdf-analyzer-data:
+networks:
+  laya-runtime:
+    external: true
+    name: laya-dataset-manager_default
